@@ -1,16 +1,10 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
-} from 'typeorm';
 import { Address } from 'src/address/address.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('users')
+@Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  public id: string;
+  public id?: string;
 
   @Column()
   public name: string;
@@ -24,27 +18,32 @@ export class User {
   @Column({ unique: true })
   public cpf: string;
 
-  @OneToOne(() => Address, {
-    nullable: true,
-    cascade: true,
-  })
-  @JoinColumn()
-  public address: Address;
+  @Column()
+  public address?: Address;
 
   constructor(
     name: string,
+
     email: string,
+
     password: string,
+
     cpf: string,
+
     id?: string,
+
+    address?: Address,
   ) {
     this.name = name;
+
     this.email = email;
+
     this.password = password;
+
     this.cpf = cpf;
 
-    if (!id) {
-      this.id = id;
-    }
+    this.id = id;
+
+    this.address = address;
   }
 }
