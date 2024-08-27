@@ -4,13 +4,10 @@ import { User } from './user.entity';
 import { UserValidator } from './user.validator';
 import { ViaCepService } from '../third-party/via-cep/via-cep.service';
 import { UserRepository } from './user.repository';
-import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
   private users: User[] = [];
-
-  constructor(private readonly userRepository: UserRepository) {}
 
   constructor(private readonly userRepository: UserRepository) {}
 
@@ -35,12 +32,13 @@ export class UserService {
     }
 
     const user = new User(name, email, password, cpf);
+
+    user.address = address;
+
     this.users.push(user);
-    return await this.userRepository.save(user);
     return await this.userRepository.save(user);
   }
 
-  async updateUser(
   async updateUser(
     id: string,
     name: string,
@@ -48,14 +46,12 @@ export class UserService {
     password: string,
     cpf: string,
   ): Promise<User | null> {
-  ): Promise<User | null> {
     UserValidator.verifyEmail(email);
     UserValidator.verifyPassword(password);
     UserValidator.checkEmailAlreadyInUse(this.users, email);
     UserValidator.checkCpfAlreadyInUse(this.users, cpf);
     UserValidator.verifyCpf(cpf);
 
-    const user = await this.getUserById(id);
     const user = await this.getUserById(id);
 
     if (user) {
@@ -65,22 +61,15 @@ export class UserService {
       user.cpf = cpf;
 
       return await this.userRepository.save(user);
-
-      return await this.userRepository.save(user);
     }
 
     return null;
-    return null;
   }
 
   async deleteUser(id: string): Promise<boolean> {
     return await this.userRepository.delete(id);
-  async deleteUser(id: string): Promise<boolean> {
-    return await this.userRepository.delete(id);
   }
 
-  async getUserById(id: string): Promise<User> {
-    const user = await this.userRepository.findById(id);
   async getUserById(id: string): Promise<User> {
     const user = await this.userRepository.findById(id);
 
@@ -91,8 +80,6 @@ export class UserService {
     return user;
   }
 
-  async listUsers(): Promise<User[]> {
-    return await this.userRepository.findAll();
   async listUsers(): Promise<User[]> {
     return await this.userRepository.findAll();
   }
